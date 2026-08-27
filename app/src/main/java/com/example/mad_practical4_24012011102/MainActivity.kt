@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 else{
-                    Toast.makeText(this,"cannot Schedul alaram",Toast.LENGTH_LONG).show()
+                    Toast.makeText(this,"cannot Schedul Alarm",Toast.LENGTH_LONG).show()
                 }
             }
             else if(str=="Stop"){
