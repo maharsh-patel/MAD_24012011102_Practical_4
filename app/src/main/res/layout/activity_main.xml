@@ -25,7 +25,7 @@
             />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_1"
+            android:id="@+id/cardCreateAlarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardElevation="20dp"
@@ -98,7 +98,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     />
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/create_alarm_button"
+                    android:id="@+id/btnCreateAlarm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -116,14 +116,15 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_2"
+            android:id="@+id/cardCancelAlarm"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardElevation="20dp"
             app:cardCornerRadius="25dp"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_1">
+            app:layout_constraintTop_toBottomOf="@id/cardCreateAlarm">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -146,8 +147,8 @@
                     android:text="Set Alram Time:"
                     android:textSize="24sp"
                     />
-                <TextView
-                    android:id="@+id/textAlarmTime"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvSetAlarmTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/text_4"
@@ -158,11 +159,11 @@
                     android:layout_marginTop="20dp"
                     />
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/cancel_alarm_button"
+                    android:id="@+id/btnCancelAlarm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textAlarmTime"
+                    app:layout_constraintTop_toBottomOf="@id/tvSetAlarmTime"
                     android:text="Cancel Alram"
                     android:backgroundTint="#52A92F"
                     android:layout_marginTop="10dp"

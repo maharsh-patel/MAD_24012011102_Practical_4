@@ -4,127 +4,120 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.icu.text.DateFormat
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.card.MaterialCardView
-
+import com.google.android.material.textview.MaterialTextView
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var createAlarmButton: Button
-    private lateinit var textAlarmTime: TextView
-    private lateinit var cancelAlarmButton : Button
-    private lateinit var cartView: MaterialCardView
+    private lateinit var cardCreateAlarm: MaterialCardView
+    private lateinit var cardCancelAlarm: MaterialCardView
+    private lateinit var btnCreateAlarm: com.google.android.material.button.MaterialButton
+    private lateinit var btnCancelAlarm: com.google.android.material.button.MaterialButton
+    private lateinit var tvSetAlarmTime: MaterialTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
+        cardCreateAlarm = findViewById(R.id.cardCreateAlarm)
+        cardCancelAlarm = findViewById(R.id.cardCancelAlarm)
+        btnCreateAlarm = findViewById(R.id.btnCreateAlarm)
+        btnCancelAlarm = findViewById(R.id.btnCancelAlarm)
+        tvSetAlarmTime = findViewById(R.id.tvSetAlarmTime)
 
-        textAlarmTime = findViewById(R.id.textAlarmTime)
-        cartView = findViewById(R.id.card_2)
-        cartView.visibility = View.GONE
-
-        createAlarmButton = findViewById(R.id.create_alarm_button)
-        createAlarmButton.setOnClickListener {
+        btnCreateAlarm.setOnClickListener {
             showTimerDialog()
         }
 
-        cancelAlarmButton = findViewById<Button>(R.id.cancel_alarm_button)
-        cancelAlarmButton.setOnClickListener{
-            cancelAlarm()
+        btnCancelAlarm.setOnClickListener {
+            setAlarm(0L, "Stop")
+            cardCancelAlarm.visibility = android.view.View.GONE
+            cardCreateAlarm.visibility = android.view.View.VISIBLE
+            Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show()
         }
-
     }
 
-        fun getCurrentTime():String{
-            val cal = Calendar.getInstance()
-            val df: DateFormat = SimpleDateFormat("MMM,dd yyyy hh:mm:ss a")
-            return  df.format(cal.time)
-        }
+    private fun showTimerDialog() {
+        val cldr: Calendar = Calendar.getInstance()
+        val hour: Int = cldr.get(Calendar.HOUR_OF_DAY)
+        val minutes: Int = cldr.get(Calendar.MINUTE)
 
+        val picker = TimePickerDialog(
+            this,
+            { _, sHour, sMinute -> sendDialogDataToActivity(sHour, sMinute) },
+            hour,
+            minutes,
+            false
+        )
+        picker.show()
+    }
 
-        fun getMillis(hour:Int,min:Int):Long{
-            val setCalendar = Calendar.getInstance()
-            setCalendar[Calendar.HOUR_OF_DAY]=hour
-            setCalendar[Calendar.MINUTE]=min
-            setCalendar[Calendar.SECOND]=0
-            return setCalendar.timeInMillis
-        }
-
-
-        fun showTimerDialog(){
-            val cldr : Calendar = Calendar.getInstance()
-            val hour : Int =cldr.get(Calendar.HOUR_OF_DAY)
-            val minutes : Int = cldr.get(Calendar.MINUTE)
-
-            val picker = TimePickerDialog(
-                this,
-                {tp,sHour,sMinuts -> sendDialogDataToActivity(sHour,sMinuts) },
-                hour,
-                minutes,
-                false
-            )
-            picker.show()
-        }
     private fun sendDialogDataToActivity(hour: Int, minute: Int) {
         val alarmCalendar = Calendar.getInstance()
-        val year: Int = alarmCalendar.get(Calendar.YEAR)
-        val month: Int = alarmCalendar.get(Calendar.MONTH)
-        val day: Int = alarmCalendar.get(Calendar.DATE)
+        val now = Calendar.getInstance()
 
-        alarmCalendar.set(year, month, day, hour, minute, 0)
-        textAlarmTime.text = SimpleDateFormat("hh:mm ss a").format(alarmCalendar.time)
+        alarmCalendar.set(Calendar.HOUR_OF_DAY, hour)
+        alarmCalendar.set(Calendar.MINUTE, minute)
+        alarmCalendar.set(Calendar.SECOND, 0)
+        alarmCalendar.set(Calendar.MILLISECOND, 0)
 
-        cartView.visibility = View.VISIBLE
+        if (alarmCalendar.before(now)) {
+            alarmCalendar.add(Calendar.DATE, 1)
+        }
+
+        tvSetAlarmTime.text = SimpleDateFormat("hh:mm:ss a", Locale.getDefault()).format(alarmCalendar.time)
 
         setAlarm(alarmCalendar.timeInMillis, "Start")
-        Toast.makeText(this, "Time: hours:${hour}, minutes:${minute}, millis:${alarmCalendar.timeInMillis}", Toast.LENGTH_SHORT).show()
+
+        cardCancelAlarm.visibility = android.view.View.VISIBLE
+        cardCreateAlarm.visibility = android.view.View.GONE
+
+        val diff = alarmCalendar.timeInMillis - now.timeInMillis
+        val diffHours = (diff / (1000 * 60 * 60)).toInt()
+        val diffMinutes = ((diff / (1000 * 60)) % 60).toInt()
+
+        val toastMessage = if (diffHours > 0) {
+            "Alarm in $diffHours Hours $diffMinutes minutes"
+        } else {
+            "Alarm in $diffMinutes minutes"
+        }
+
+        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
     }
 
-        fun  setAlarm(millisTimes:Long,str:String)
-        {
-            val intent = Intent(this,AlarmBroadcastReceiver::class.java)
-            intent.putExtra("Service1",str)
-            val pendingIntent = PendingIntent.getBroadcast(applicationContext,234324243,intent,PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            val alarmManager =getSystemService(ALARM_SERVICE) as AlarmManager
-            if(str=="Start"){
-                if(alarmManager.canScheduleExactAlarms()) {
-                    alarmManager.setExact(
-                        AlarmManager.RTC_WAKEUP,
-                        millisTimes,
-                        pendingIntent
-                    )
+    private fun setAlarm(millisTime: Long, str: String) {
+        val intent = Intent(this, AlarmBroadcastReceiver::class.java)
+        intent.putExtra("Service1", str)
 
-                }
-                else{
-                    Toast.makeText(this,"cannot Schedul Alarm",Toast.LENGTH_LONG).show()
-                }
+        val pendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            234324243,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
+        if (str == "Start") {
+            if (!alarmManager.canScheduleExactAlarms()) {
+                val intentPermission = Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                startActivity(intentPermission)
+                return
             }
-            else if(str=="Stop"){
-                alarmManager.cancel(pendingIntent)
-                sendBroadcast(intent)
-            }
+            alarmManager.setExact(
+                AlarmManager.RTC_WAKEUP,
+                millisTime,
+                pendingIntent
+            )
+        } else if (str == "Stop") {
+            alarmManager.cancel(pendingIntent)
+            sendBroadcast(intent)
         }
-    fun cancelAlarm() {
-        setAlarm(0, "Stop")
-        Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show()
-        cartView.visibility = View.GONE
     }
 }

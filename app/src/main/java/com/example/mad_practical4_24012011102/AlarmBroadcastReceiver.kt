@@ -3,22 +3,24 @@ package com.example.mad_practical4_24012011102
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context, intent: Intent) {
-        val action = intent.getStringExtra("Service1")
-        if(action=="Start"){
-            val serviceIntent = Intent(context, MyService::class.java)
-            serviceIntent.putExtra("Service", "Play")
-            context.startService(serviceIntent)
-            Toast.makeText(context, "Alarm started", Toast.LENGTH_SHORT).show()
-        }
-        else if (action == "Stop") {
-            val serviceIntent = Intent(context, MyService::class.java)
-            context.stopService(serviceIntent)
-            Toast.makeText(context, "Alarm stopped", Toast.LENGTH_SHORT).show()
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (intent != null && context != null) {
+            val str1 = intent.getStringExtra("Service1")
+
+            if (str1 == null) {
+                // do nothing
+            } else if (str1 == "Start" || str1 == "Stop") {
+                val intentService = Intent(context, AlarmService::class.java)
+                intentService.putExtra("Service1", intent.getStringExtra("Service1"))
+
+                if (str1 == "Start")
+                    context.startService(intentService)
+                else if (str1 == "Stop")
+                    context.stopService(intentService)
+            }
         }
     }
 }
