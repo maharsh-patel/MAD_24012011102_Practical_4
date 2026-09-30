@@ -10,16 +10,19 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         if (intent != null && context != null) {
             val str1 = intent.getStringExtra("Service1")
 
-            if (str1 == null) {
-                // do nothing
-            } else if (str1 == "Start" || str1 == "Stop") {
+            if (str1 == "Start" || str1 == "Stop") {
                 val intentService = Intent(context, AlarmService::class.java)
-                intentService.putExtra("Service1", intent.getStringExtra("Service1"))
+                intentService.putExtra("Service1", str1)
 
-                if (str1 == "Start")
-                    context.startService(intentService)
-                else if (str1 == "Stop")
+                if (str1 == "Start") {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        context.startForegroundService(intentService)
+                    } else {
+                        context.startService(intentService)
+                    }
+                } else if (str1 == "Stop") {
                     context.stopService(intentService)
+                }
             }
         }
     }

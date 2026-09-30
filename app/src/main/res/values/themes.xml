@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.MAD_Practical4_24012011102" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowBackground">@color/dark_bg</item>
+        <item name="android:statusBarColor">#4CAF50</item>
     </style>
 
     <style name="Theme.MAD_Practical4_24012011102" parent="Base.Theme.MAD_Practical4_24012011102" />

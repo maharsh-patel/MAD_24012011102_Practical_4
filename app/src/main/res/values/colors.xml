@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_bg">#1A1B1E</color>
+    <color name="dark_card_bg">#25272B</color>
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_button_text">#102A12</color>
+    <color name="text_secondary">#B0B3B8</color>
 </resources>

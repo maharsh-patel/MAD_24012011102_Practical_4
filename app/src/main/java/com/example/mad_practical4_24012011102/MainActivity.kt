@@ -76,7 +76,6 @@ class MainActivity : AppCompatActivity() {
         setAlarm(alarmCalendar.timeInMillis, "Start")
 
         cardCancelAlarm.visibility = android.view.View.VISIBLE
-        cardCreateAlarm.visibility = android.view.View.GONE
 
         val diff = alarmCalendar.timeInMillis - now.timeInMillis
         val diffHours = (diff / (1000 * 60 * 60)).toInt()
