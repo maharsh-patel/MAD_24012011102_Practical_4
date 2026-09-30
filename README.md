@@ -98,6 +98,20 @@ Declared in `AndroidManifest.xml`:
 
 ---
 
+## 📸 Output Screenshots
+
+| Home Screen | Time Picker Dialog | Alarm Set |
+|:-----------:|:------------------:|:---------:|
+| ![Home Screen](Screenshot/Screenshot_20260930_235352.png) | ![Time Picker](Screenshot/Screenshot_20260930_235412.png) | ![Alarm Set](Screenshot/Screenshot_20260930_235427.png) |
+
+**Screen Descriptions:**
+
+1. **Home Screen** — Main UI displaying the *Create Alarm* card with an alarm clock banner, description text, live `TextClock` widget, and the green **"Create Alarm"** button.
+2. **Time Picker Dialog** — Material time picker dialog that appears when the user taps "Create Alarm", allowing selection of hour and minutes in a circular dial.
+3. **Alarm Set** — After setting an alarm, both cards are visible — the *Create Alarm* card and the *Cancel Alarm* card showing the scheduled time (`11:54:00 PM`) and remaining duration (`23 Hours 59 minutes`).
+
+---
+
 ## 🛠️ Tech Stack
 
 | Component | Technology |
